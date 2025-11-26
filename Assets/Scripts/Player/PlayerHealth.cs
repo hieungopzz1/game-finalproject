@@ -7,7 +7,7 @@ public class PlayerHealth : MonoBehaviour
     public float maxHealth = 10f;
     [SerializeField]private float currentHealth;
     public event Action<float> OnHealthChanged;
-
+    public DamageFlash damageFlash;
     void Start()
     {
         currentHealth = maxHealth;
@@ -21,6 +21,11 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth < 0)
         {
             currentHealth = 0;
+        }
+
+        if (damageFlash != null)
+        {
+            damageFlash.CallFlash();
         }
 
         if (DamagePopupManager.Instance != null)
@@ -41,6 +46,10 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.GameOver();
+        }
         this.gameObject.SetActive(false);
     }
 }
