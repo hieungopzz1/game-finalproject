@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
             );
         }
         OnHealthChanged?.Invoke(currentHealth / maxHealth);
-        Debug.Log("Player Health: " + currentHealth);
+        //Debug.Log("Player Health: " + currentHealth);
         ani.SetTrigger("Hit");
         if (currentHealth <= 0f)
         {

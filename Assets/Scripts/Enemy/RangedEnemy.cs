@@ -71,6 +71,18 @@ public class RangedEnemy : EnemyBase
     private bool isShieldActive = false;
 
 
+    [Header("Dash Charge Skill")]
+    public float dashSpeed = 20f;      // Tốc độ lướt (nhanh gấp 5-10 lần bình thường)
+    public float dashDuration = 0.5f;  // Thời gian lướt (ngắn thôi)
+    public float dashCooldown = 12f;   // Hồi chiêu
+    public float dashWarningTime = 0.8f; // Thời gian cảnh báo trước khi lướt
+    public float dashDamage = 10f;     // Dame khi húc trúng (phải đau!)
+    public float dashDistance = 10f;
+
+    private float nextDashTime;
+    private bool isDashing = false;    // Cờ kiểm tra đang lướt
+
+
     protected override void Awake()
     {
         startInvulnerable = true;
@@ -108,7 +120,7 @@ public class RangedEnemy : EnemyBase
         }
         base.Start();
         if (shieldVisual != null) shieldVisual.SetActive(false);
-        nextShieldTime = Time.time + 5f;
+        nextShieldTime = Time.time + 13f;
     }
     protected override void Update()
     {
@@ -193,10 +205,12 @@ public class RangedEnemy : EnemyBase
     protected override void HandleBehaviour()
     {
         if (target == null) return;
-
+        if (isDashing) return; // Không làm gì khác khi đang lướt
         FaceTarget();
 
         HandleShieldSkill();
+
+        HandleDashSkill();
 
         if (!IsTargetInRange(detectionRange)) return;
 
@@ -235,7 +249,7 @@ public class RangedEnemy : EnemyBase
         isShieldActive = true;
 
         // 1. Bật Bất Tử
-        SetInvulnerable(true);
+        //SetInvulnerable(true);
 
         // 2. Hiện hình ảnh cái khiên
         if (shieldVisual != null) shieldVisual.SetActive(true);
@@ -247,12 +261,29 @@ public class RangedEnemy : EnemyBase
 
         // 4. Tắt khiên
         isShieldActive = false;
-        SetInvulnerable(false); // Tắt bất tử, lại đánh được
+        //SetInvulnerable(false); // Tắt bất tử, lại đánh được
         if (shieldVisual != null) shieldVisual.SetActive(false);
 
         // 5. Đặt thời gian hồi chiêu tiếp theo
         nextShieldTime = Time.time + shieldCooldown;
         Debug.Log("BOSS: Hết khiên, bắt đầu hồi chiêu.");
+    }
+
+    public override void TakeDamage(float amount)
+    {
+        // Nếu đang bật khiên
+        if (isShieldActive)
+        {
+            // Nếu damage to hơn 1 thì ép xuống 1
+            if (amount > 1)
+            {
+                amount = 1;
+            }
+            // (Tuỳ chọn) Hiệu ứng âm thanh "Keng" vào khiên ở đây
+        }
+
+        // Gọi hàm gốc để trừ máu (với lượng damage đã bị giảm)
+        base.TakeDamage(amount);
     }
 
     private void HandlePureNormal(float normalCd)
@@ -334,7 +365,7 @@ public class RangedEnemy : EnemyBase
                 rb.linearVelocity = dir * bulletSpeed;
             }
         }
-        if (!hasFiredFirstShot)
+        if ( !hasFiredFirstShot)
         {
             hasFiredFirstShot = true;
             SetInvulnerable(false);
@@ -401,12 +432,12 @@ public class RangedEnemy : EnemyBase
         if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
-            rb.gravityScale = 2f;
-            rb.linearVelocity = new Vector2(0, 7f);
+            rb.gravityScale = 1.5f;
+            rb.linearVelocity = new Vector2(0, 10f);
             rb.angularVelocity = Random.Range(-180f, 180f);
         }
         WaveUIController.instance.ShowWave("BOSS DEFEATED!");
-        Invoke(nameof(TriggerWin), 2f);
+        Invoke(nameof(TriggerWin), 3f);
         Destroy(gameObject, 3f);
     }
 
@@ -416,6 +447,62 @@ public class RangedEnemy : EnemyBase
         {
             GameManager.instance.Victory();
         }
+    }
+
+    private void HandleDashSkill()
+    {
+        // Chỉ lướt khi còn dưới 70% máu (Phase 2 trở đi)
+        if (currentHealth / maxHealth > 0.7f) return;
+
+        // Nếu đang lướt hoặc chưa hồi chiêu thì thôi
+        if (isDashing || Time.time < nextDashTime) return;
+
+        StartCoroutine(DashRoutine());
+    }
+
+    private IEnumerator DashRoutine()
+    {
+        isDashing = true;
+
+        Debug.Log("BOSS: Đang gồng, chuẩn bị húc!");
+
+        Color originalColor = spriteRenderer.color;
+        if (spriteRenderer != null) spriteRenderer.color = Color.green;
+
+        Vector3 dashDir = (target.position - transform.position).normalized;
+        yield return new WaitForSeconds(1f);
+        Debug.Log("BOSS: HÚC!");
+
+        bool hasDealtDamage = false;
+        float startTime = Time.time;
+
+        while (Time.time < startTime + dashDuration)
+        {
+            transform.position += dashDir * dashSpeed * Time.deltaTime;
+
+            if (!hasDealtDamage)
+            {
+                Collider2D hit = Physics2D.OverlapCircle(transform.position, 1.5f);
+
+                if (hit != null && hit.CompareTag("Player"))
+                {
+                    PlayerHealth playerHp = hit.GetComponent<PlayerHealth>();
+                    if (playerHp != null)
+                    {
+                        Debug.Log("BOSS: Húc trúng Player!");
+                        playerHp.TakeDamage(dashDamage);
+                        hasDealtDamage = true;
+                    }
+                }
+            }
+            yield return null;
+        }
+
+        if (spriteRenderer != null) spriteRenderer.color = originalColor;
+        yield return new WaitForSeconds(1f);
+
+        isDashing = false;
+        nextDashTime = Time.time + dashCooldown;
     }
 
 }

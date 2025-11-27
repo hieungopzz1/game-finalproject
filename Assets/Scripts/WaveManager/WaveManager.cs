@@ -23,8 +23,9 @@ public class WaveManager : MonoBehaviour
                                        // có thể là 2,3 điểm bên trên màn
 
     [Header("Boss")]
-    public GameObject bossPrefab;
+    public GameObject[] bossPrefab;
     public Transform bossSpawnPoint;
+    private int bossWaveIndex = -1;
 
     [Header("Delay")]
     public float startDelay = 1f;      // đợi 1s rồi mới spawn wave 1
@@ -53,6 +54,11 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
+        if(waves.Length >0)
+        {
+            bossWaveIndex = Random.Range(0, waves.Length);
+            Debug.Log("GAME INFO: Boss sẽ xuất hiện sau khi xong Wave " + (bossWaveIndex + 1));
+        }
         StartCoroutine(StartFirstWave());
     }
 
@@ -68,10 +74,10 @@ public class WaveManager : MonoBehaviour
 
         if (currentWaveIndex >= waves.Length)
         {
-            if (!bossSpawned)
-            {
-                SpawnBoss();
-            }
+            //if (!bossSpawned)
+            //{
+            //    SpawnBoss();
+            //}
             return;
         }
 
@@ -128,7 +134,7 @@ public class WaveManager : MonoBehaviour
 
         GameObject newEnemy =  Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
 
-        float muitipler = 1f + (currentWaveIndex * 0.1f);
+        float muitipler = 1f + (currentWaveIndex * 0.2f);
         EnemyBase enemyBase = newEnemy.GetComponent<EnemyBase>();
         if (enemyBase != null)
         {
@@ -139,6 +145,7 @@ public class WaveManager : MonoBehaviour
 
     private void OnEnemyDied(EnemyBase enemy)
     {
+        if (bossSpawned) return;
         // Giảm số lượng quái sống
         enemiesAlive--;
         if (enemiesAlive < 0) enemiesAlive = 0;
@@ -162,7 +169,7 @@ public class WaveManager : MonoBehaviour
         // 3. Nếu đã sinh xong VÀ hết quái sống -> Qua màn
         Debug.Log("Wave Cleared!");
 
-        if (currentWaveIndex >= waves.Length - 1)
+        if (currentWaveIndex == waves.Length - 1)
         {
             // Nếu đây là wave cuối cùng -> Gọi Boss
             if (!bossSpawned)
@@ -172,8 +179,16 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            // Nếu chưa phải wave cuối -> Wave tiếp theo
-            StartCoroutine(StartNextWaveAfterDelay());
+            if (currentWaveIndex < waves.Length - 1)
+            {
+                StartCoroutine(StartNextWaveAfterDelay());
+            }
+            else
+            {
+                // Trường hợp hiếm: Hết sạch Wave mà Boss vẫn chưa ra (Logic sai đâu đó)
+                // Hoặc Boss đã ra và chết rồi
+                Debug.Log("Hết Wave!");
+            }
         }
     }
 
@@ -215,9 +230,12 @@ public class WaveManager : MonoBehaviour
 
         bossSpawned = true;
 
-        Vector3 spawnPos = bossSpawnPoint != null ? bossSpawnPoint.position : Vector3.zero;
-        Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+        GameObject randomBoss = bossPrefab[Random.Range(0, bossPrefab.Length)];
 
-        Debug.Log("WaveManager: Boss spawned!");
+        Vector3 spawnPos = bossSpawnPoint != null ? bossSpawnPoint.position : Vector3.zero;
+
+        Instantiate(randomBoss, spawnPos, Quaternion.identity);
+
+        Debug.Log($"WaveManager: Boss {randomBoss.name} spawned!");
     }
 }

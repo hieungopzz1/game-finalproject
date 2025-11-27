@@ -35,7 +35,7 @@ public class EnemyProjectile : MonoBehaviour
             if (hp != null)
             {
                 hp.TakeDamage(damage);
-                Debug.Log("Enemy bullet hit player, dmg = " + damage);
+              //  Debug.Log("Enemy bullet hit player, dmg = " + damage);
             }
 
             Destroy(gameObject);

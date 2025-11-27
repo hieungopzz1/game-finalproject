@@ -251,7 +251,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 8314928471344691316, guid: be8a4dba7055f16429af7e4f9feea8db, type: 3}
   firePoint: {fileID: 3791262167375892308}
   projectileSpeed: 10
-  safeRadius: 7
+  safeRadius: 5.5
   repositionInterval: 3
   reachThreshold: 1
 --- !u!1 &5823109106726923180
