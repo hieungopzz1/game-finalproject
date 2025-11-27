@@ -18,6 +18,10 @@ public class GunRaycastLine : MonoBehaviour
     private int currentAmmo;
     private bool isReloading = false;
 
+
+    [Header("Audio")]
+    public AudioClip shootSound;
+    public AudioClip reloadSound;
     void Start()
     {
         currentAmmo = maxAmmo;
@@ -67,6 +71,11 @@ public class GunRaycastLine : MonoBehaviour
         }
 
         StartCoroutine(ShowMuzzleFlash());
+
+        if (AudioManager.instance != null && shootSound != null)
+        {
+            AudioManager.instance.PlaySFX(shootSound);
+        }
     }
 
     IEnumerator Reload()
@@ -74,6 +83,11 @@ public class GunRaycastLine : MonoBehaviour
         isReloading = true;
 
         if (ammoText != null) ammoText.text = "...";
+
+        if (AudioManager.instance != null && reloadSound != null)
+        {
+            AudioManager.instance.PlaySFX(reloadSound);
+        }
 
         yield return new WaitForSeconds(reloadTime);
 

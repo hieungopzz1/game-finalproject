@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
@@ -6,7 +6,11 @@ public class MainMenu : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        // Phát nhạc Menu
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayMenuMusic();
+        }
     }
 
     // Update is called once per frame

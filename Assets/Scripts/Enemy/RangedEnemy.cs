@@ -82,6 +82,9 @@ public class RangedEnemy : EnemyBase
     private float nextDashTime;
     private bool isDashing = false;    // Cờ kiểm tra đang lướt
 
+    [Header("Audio")]
+    public AudioClip bossDied;
+
 
     protected override void Awake()
     {
@@ -436,9 +439,14 @@ public class RangedEnemy : EnemyBase
             rb.linearVelocity = new Vector2(0, 10f);
             rb.angularVelocity = Random.Range(-180f, 180f);
         }
+
         WaveUIController.instance.ShowWave("BOSS DEFEATED!");
         Invoke(nameof(TriggerWin), 3f);
         Destroy(gameObject, 3f);
+        if (AudioManager.instance != null && bossDied != null)
+        {
+            AudioManager.instance.PlaySFX(bossDied);
+        }
     }
 
     void TriggerWin()

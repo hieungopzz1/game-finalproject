@@ -298,6 +298,7 @@ MonoBehaviour:
   dashWarningTime: 1
   dashDamage: 10
   dashDistance: 10
+  bossDied: {fileID: 8300000, guid: c383d907748cbf549aa256c55064328e, type: 3}
 --- !u!1 &9218872457638818165
 GameObject:
   m_ObjectHideFlags: 0

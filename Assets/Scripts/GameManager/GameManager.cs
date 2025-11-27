@@ -50,6 +50,11 @@ public class GameManager : MonoBehaviour
 
         // Dừng game lại (hoặc để chạy slow motion cho ngầu)
         Time.timeScale = 0f;
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayVictoryMusic();
+        }
     }
     // Gắn vào nút Restart
     public void RestartGame()

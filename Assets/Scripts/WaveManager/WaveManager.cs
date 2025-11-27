@@ -42,6 +42,9 @@ public class WaveManager : MonoBehaviour
     private int enemiesToKillThisWave = 0; 
     private int enemiesKilledThisWave = 0;
 
+
+    [Header("Audio")]
+    public AudioClip startMatchSound;
     private void OnEnable()
     {
         EnemyBase.OnAnyEnemyDied += OnEnemyDied;
@@ -54,7 +57,18 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
-        if(waves.Length >0)
+        if (AudioManager.instance != null && startMatchSound != null)
+        {
+            AudioManager.instance.PlaySFX(startMatchSound);
+        }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayBattleMusic();
+        }
+
+
+        if (waves.Length >0)
         {
             bossWaveIndex = Random.Range(0, waves.Length);
             Debug.Log("GAME INFO: Boss sẽ xuất hiện sau khi xong Wave " + (bossWaveIndex + 1));
@@ -227,6 +241,11 @@ public class WaveManager : MonoBehaviour
             Debug.LogWarning("WaveManager: BossPrefab chưa gán!");
             return;
         }
+
+        //if (AudioManager.instance != null)
+        //{
+        //    AudioManager.instance.PlayBossMusic();
+        //}
 
         bossSpawned = true;
 
