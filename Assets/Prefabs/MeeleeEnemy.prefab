@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 737f8ec503d237c42b9aa06db082527b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeleeEnemy
-  maxHealth: 40
+  maxHealth: 60
   damage: 1
   moveSpeed: 2
   detectionRange: 30

@@ -209,7 +209,7 @@ public class WaveManager : MonoBehaviour
     private void UpdateEnemyCounterUI()
     {
         if (enemyCounterText == null) return;
-        enemyCounterText.text = $"{enemiesKilledThisWave} / {enemiesToKillThisWave}";
+        enemyCounterText.text = $"{enemiesKilledThisWave}";
     }
 
 

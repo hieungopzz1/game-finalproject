@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: ec025926b9772c0459402c0b82ce7235
+guid: 2acadc0a3c858c040802e4497e3fbbf6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2323772491742852611
-    second: Dot_02_0
-  - first:
-      213: 6529624235806242519
-    second: Dot_02_1
-  - first:
-      213: -7864289094445384318
-    second: Dot_02_2
+      213: 8906002355140719198
+    second: Bonus_BTN_01_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -43,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -52,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -119,57 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dot_02_0
+      name: Bonus_BTN_01_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 17
-        width: 81
-        height: 80
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 3063825f4c2bf3020800000000000000
-      internalID: 2323772491742852611
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Dot_02_1
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 12
-        width: 72
-        height: 73
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7d63304a5a2ed9a50800000000000000
-      internalID: 6529624235806242519
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Dot_02_2
-      rect:
-        serializedVersion: 2
-        x: 18
         y: 0
-        width: 79
-        height: 80
+        width: 201
+        height: 208
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 28dba924cbe6cd290800000000000000
-      internalID: -7864289094445384318
+      spriteID: e5274fab4f9789b70800000000000000
+      internalID: 8906002355140719198
       vertices: []
       indices: 
       edges: []
@@ -188,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -198,9 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dot_02_0: 2323772491742852611
-      Dot_02_1: 6529624235806242519
-      Dot_02_2: -7864289094445384318
+      Bonus_BTN_01_0: 8906002355140719198
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

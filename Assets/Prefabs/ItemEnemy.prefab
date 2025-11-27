@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f99ccf5f8e687a4597eb7640a99d207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropEnemy
-  maxHealth: 30
+  maxHealth: 50
   damage: 3
   moveSpeed: 5
   detectionRange: 30
@@ -245,13 +245,14 @@ MonoBehaviour:
   anim: {fileID: 6681161889648562994}
   startInvulnerable: 0
   dropItems:
-  - {fileID: 4775450480332805798, guid: c148baa0627cb974b91760e3dc76f065, type: 3}
+  - {fileID: 6808896391915571227, guid: 51da593578860b6489c2a66e48992991, type: 3}
   - {fileID: 7713385338800670328, guid: cb206bab4c53b7d4697b522d67cfc11d, type: 3}
-  dropChance: 0.5
+  - {fileID: 4775450480332805798, guid: c148baa0627cb974b91760e3dc76f065, type: 3}
+  dropChance: 0.7
   projectilePrefab: {fileID: 8314928471344691316, guid: be8a4dba7055f16429af7e4f9feea8db, type: 3}
   firePoint: {fileID: 3791262167375892308}
   projectileSpeed: 10
-  safeRadius: 5.5
+  safeRadius: 6
   repositionInterval: 3
   reachThreshold: 1
 --- !u!1 &5823109106726923180

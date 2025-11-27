@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514af5c8f615bab4181c6e329a4f3512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnemy
-  maxHealth: 25
+  maxHealth: 36
   damage: 3
   moveSpeed: 2
   detectionRange: 30
