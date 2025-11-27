@@ -4,6 +4,7 @@ public class WeaponPickup : MonoBehaviour
 {
     [Tooltip("Tên này PHẢI GIỐNG HỆT tên GameObject súng gắn trên người Player")]
     public string weaponNameTarget = "MachineGun";
+    public float lifeTime = 3f;
 
     // Hiệu ứng bay bay cho đẹp (Copy từ RangedEnemy của bạn)
     private float initialY;
@@ -11,6 +12,7 @@ public class WeaponPickup : MonoBehaviour
     void Start()
     {
         initialY = transform.position.y;
+        Destroy(gameObject, lifeTime);
     }
 
     void Update()

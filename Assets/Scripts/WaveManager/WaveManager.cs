@@ -29,7 +29,7 @@ public class WaveManager : MonoBehaviour
     [Header("Delay")]
     public float startDelay = 1f;      // đợi 1s rồi mới spawn wave 1
     public float nextWaveDelay = 2f;   // đợi 2s giữa các wave
-
+    public float waveSpawnDelay = 2f;
     private int currentWaveIndex = -1;
     private int enemiesAlive = 0;
     private bool spawningWave = false;
@@ -80,6 +80,7 @@ public class WaveManager : MonoBehaviour
 
         enemiesToKillThisWave = wave.enemyCount;
         enemiesKilledThisWave = 0;
+        enemiesAlive = 0;
         UpdateEnemyCounterUI();
         if (waveUI != null)
         {
@@ -94,6 +95,7 @@ public class WaveManager : MonoBehaviour
     {
         spawningWave = true;
         enemiesAlive = 0;
+        yield return new WaitForSeconds(waveSpawnDelay);
 
         for (int i = 0; i < wave.enemyCount; i++)
         {
@@ -104,6 +106,7 @@ public class WaveManager : MonoBehaviour
         }
 
         spawningWave = false;
+        CheckWaveStatus();
     }
 
     private void SpawnEnemyFromWave(Wave wave)
@@ -123,29 +126,54 @@ public class WaveManager : MonoBehaviour
 
         Vector3 spawnPos = spawnPoint != null ? spawnPoint.position : Vector3.zero;
 
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        GameObject newEnemy =  Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+
+        float muitipler = 1f + (currentWaveIndex * 0.1f);
+        EnemyBase enemyBase = newEnemy.GetComponent<EnemyBase>();
+        if (enemyBase != null)
+        {
+            enemyBase.BuffStats(muitipler);
+            Debug.Log($"WaveManager: Spawned enemy {enemyBase.name} with stats multiplier {muitipler}");
+        }
     }
 
     private void OnEnemyDied(EnemyBase enemy)
     {
-        enemiesAlive = Mathf.Max(0, enemiesAlive - 1);
+        // Giảm số lượng quái sống
+        enemiesAlive--;
+        if (enemiesAlive < 0) enemiesAlive = 0;
 
-        enemiesKilledThisWave = Mathf.Clamp(enemiesKilledThisWave + 1, 0, enemiesToKillThisWave);
+        // Tăng số lượng đã giết để hiện UI
+        enemiesKilledThisWave++;
         UpdateEnemyCounterUI();
 
-        if (!spawningWave && enemiesAlive <= 0)
+        // Kiểm tra xem đã hết Wave chưa
+        CheckWaveStatus();
+    }
+
+    private void CheckWaveStatus()
+    {
+        // 1. Nếu vẫn đang sinh quái (chưa chạy xong vòng for) -> Không làm gì cả
+        if (spawningWave) return;
+
+        // 2. Nếu đã sinh xong mà vẫn còn quái sống -> Không làm gì cả
+        if (enemiesAlive > 0) return;
+
+        // 3. Nếu đã sinh xong VÀ hết quái sống -> Qua màn
+        Debug.Log("Wave Cleared!");
+
+        if (currentWaveIndex >= waves.Length - 1)
         {
-            if (currentWaveIndex == waves.Length - 1)
+            // Nếu đây là wave cuối cùng -> Gọi Boss
+            if (!bossSpawned)
             {
-                if (!bossSpawned)
-                {
-                    StartCoroutine(SpawnBossAfterDelay());
-                }
+                StartCoroutine(SpawnBossAfterDelay());
             }
-            else
-            {
-                StartCoroutine(StartNextWaveAfterDelay());
-            }
+        }
+        else
+        {
+            // Nếu chưa phải wave cuối -> Wave tiếp theo
+            StartCoroutine(StartNextWaveAfterDelay());
         }
     }
 

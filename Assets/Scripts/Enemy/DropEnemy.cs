@@ -140,6 +140,7 @@ public class DropEnemy : EnemyBase
         {
             GameObject prefab = dropItems[Random.Range(0, dropItems.Length)];
             Instantiate(prefab, transform.position, Quaternion.identity);
+           
         }
         else
         {

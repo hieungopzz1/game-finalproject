@@ -161,4 +161,12 @@ public abstract class EnemyBase : MonoBehaviour
         canTakeDamage = !value;
     }
 
+
+    public void BuffStats(float multiplier)
+    {
+        maxHealth *= multiplier;
+        currentHealth = maxHealth;
+        damage *= multiplier;
+        moveSpeed *= (1f + (multiplier - 1f) * 0.1f); 
+    }
 }

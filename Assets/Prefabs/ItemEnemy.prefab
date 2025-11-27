@@ -246,7 +246,8 @@ MonoBehaviour:
   startInvulnerable: 0
   dropItems:
   - {fileID: 4775450480332805798, guid: c148baa0627cb974b91760e3dc76f065, type: 3}
-  dropChance: 1
+  - {fileID: 7713385338800670328, guid: cb206bab4c53b7d4697b522d67cfc11d, type: 3}
+  dropChance: 0.5
   projectilePrefab: {fileID: 8314928471344691316, guid: be8a4dba7055f16429af7e4f9feea8db, type: 3}
   firePoint: {fileID: 3791262167375892308}
   projectileSpeed: 10

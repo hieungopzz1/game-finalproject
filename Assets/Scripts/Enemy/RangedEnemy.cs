@@ -33,6 +33,8 @@ public class RangedEnemy : EnemyBase
     public Transform firePoint;
     public GameObject bulletPrefab;
     public float bulletSpeed = 8f;
+    public float minNormalDamage = 3f;
+    public float maxNormalDamage = 7f;
 
     [Header("Cooldown theo phase")]
     [Tooltip("Phase 1: HP > 70%")]
@@ -50,6 +52,8 @@ public class RangedEnemy : EnemyBase
     public bool useSpreadSkill = true;
     public int spreadBulletCount = 7;
     public float spreadAngle = 60f;
+    public float minSpreadDamage = 6f;
+    public float maxSpreadDamage = 10f;
     public GameObject bulletSkillPrefab;
 
 
@@ -58,6 +62,13 @@ public class RangedEnemy : EnemyBase
 
     private bool hasFiredFirstShot = false;
 
+    [Header("Shield Skill (NEW)")]
+    // --- THAY ĐỔI 2: Skill Khiên ---
+    public GameObject shieldVisual;    // Kéo cái ShieldVisual vào đây
+    public float shieldDuration = 10f; // Tồn tại 10 giây
+    public float shieldCooldown = 15f; // Hồi chiêu 15 giây
+    private float nextShieldTime;      // Thời điểm được bật khiên tiếp theo
+    private bool isShieldActive = false;
 
 
     protected override void Awake()
@@ -96,6 +107,8 @@ public class RangedEnemy : EnemyBase
             Debug.LogWarning("Chưa có BossHealthUI trong Scene!");
         }
         base.Start();
+        if (shieldVisual != null) shieldVisual.SetActive(false);
+        nextShieldTime = Time.time + 5f;
     }
     protected override void Update()
     {
@@ -183,6 +196,8 @@ public class RangedEnemy : EnemyBase
 
         FaceTarget();
 
+        HandleShieldSkill();
+
         if (!IsTargetInRange(detectionRange)) return;
 
         float hpPercent = currentHealth / maxHealth;
@@ -202,6 +217,43 @@ public class RangedEnemy : EnemyBase
         HandlePureNormal(phase1NormalCooldown);
     }
 
+
+    private void HandleShieldSkill()
+    {
+        // Nếu đang bật khiên rồi thì thôi
+        if (isShieldActive) return;
+
+        // Nếu đủ thời gian hồi chiêu -> Bật khiên
+        if (Time.time >= nextShieldTime)
+        {
+            StartCoroutine(ActivateShield());
+        }
+    }
+
+    private IEnumerator ActivateShield()
+    {
+        isShieldActive = true;
+
+        // 1. Bật Bất Tử
+        SetInvulnerable(true);
+
+        // 2. Hiện hình ảnh cái khiên
+        if (shieldVisual != null) shieldVisual.SetActive(true);
+
+        Debug.Log("BOSS: Bật khiên năng lượng!");
+
+        // 3. Chờ 10 giây
+        yield return new WaitForSeconds(shieldDuration);
+
+        // 4. Tắt khiên
+        isShieldActive = false;
+        SetInvulnerable(false); // Tắt bất tử, lại đánh được
+        if (shieldVisual != null) shieldVisual.SetActive(false);
+
+        // 5. Đặt thời gian hồi chiêu tiếp theo
+        nextShieldTime = Time.time + shieldCooldown;
+        Debug.Log("BOSS: Hết khiên, bắt đầu hồi chiêu.");
+    }
 
     private void HandlePureNormal(float normalCd)
     {
@@ -271,7 +323,8 @@ public class RangedEnemy : EnemyBase
         EnemyProjectile proj = bulletObj.GetComponent<EnemyProjectile>();
         if (proj != null)
         {
-            proj.Init(dir, bulletSpeed, damage);
+            float randDamage = Random.Range(minNormalDamage, maxNormalDamage);
+            proj.Init(dir, bulletSpeed, randDamage);
         }
         else
         {
@@ -316,7 +369,8 @@ public class RangedEnemy : EnemyBase
             if (proj != null)
             {
                 Vector2 dir = rot * Vector2.right;
-                proj.Init(dir, bulletSpeed, damage);
+                float randDamage = Random.Range(minNormalDamage, maxNormalDamage);
+                proj.Init(dir, bulletSpeed, randDamage);
             }
             else
             {
@@ -352,7 +406,16 @@ public class RangedEnemy : EnemyBase
             rb.angularVelocity = Random.Range(-180f, 180f);
         }
         WaveUIController.instance.ShowWave("BOSS DEFEATED!");
+        Invoke(nameof(TriggerWin), 2f);
         Destroy(gameObject, 3f);
+    }
+
+    void TriggerWin()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.Victory();
+        }
     }
 
 }

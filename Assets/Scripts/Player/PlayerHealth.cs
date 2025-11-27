@@ -44,6 +44,24 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void Heal(float amount)
+    {
+        if (currentHealth >= maxHealth) return; // Đầy máu rồi thì thôi
+
+        currentHealth += amount;
+
+        // Không cho vượt quá maxHealth
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        // Cập nhật UI (Thanh máu xanh lại)
+        OnHealthChanged?.Invoke(currentHealth / maxHealth);
+
+        Debug.Log($"Đã hồi {amount} máu. HP hiện tại: {currentHealth}");
+    }
+
     private void Die()
     {
         if (GameManager.instance != null)

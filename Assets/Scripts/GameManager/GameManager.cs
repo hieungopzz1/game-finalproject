@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI References")]
     public GameObject gameOverPanel; // Kéo cái Panel Game Over vào đây
+    public GameObject victoryPanel; // 1. THÊM BIẾN NÀY
 
     private bool isGameOver = false;
 
@@ -34,6 +35,22 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    public void Victory()
+    {
+        if (isGameOver) return; // Nếu đã thắng/thua rồi thì thôi
+        isGameOver = true;
+
+        Debug.Log("Victory!");
+
+        // Hiện bảng chiến thắng
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+        }
+
+        // Dừng game lại (hoặc để chạy slow motion cho ngầu)
+        Time.timeScale = 0f;
+    }
     // Gắn vào nút Restart
     public void RestartGame()
     {
