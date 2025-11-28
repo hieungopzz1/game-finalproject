@@ -6,8 +6,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("UI References")]
-    public GameObject gameOverPanel; // Kéo cái Panel Game Over vào đây
-    public GameObject victoryPanel; // 1. THÊM BIẾN NÀY
+    public GameObject gameOverPanel;
+    public GameObject victoryPanel;
 
     private bool isGameOver = false;
 
@@ -17,58 +17,57 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // Hàm này sẽ được gọi khi Player chết
+    // --- HÀM THUA ---
     public void GameOver()
     {
         if (isGameOver) return;
         isGameOver = true;
 
-        Debug.Log("Game Over!");
+        // Lưu điểm khi chết
+        SaveScore();
 
-        // 1. Hiện bảng Game Over
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-        }
-
-        // 2. Dừng game lại (đóng băng thời gian)
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
         Time.timeScale = 0f;
     }
 
+    // --- HÀM THẮNG (Cần sửa chỗ này) ---
     public void Victory()
     {
-        if (isGameOver) return; // Nếu đã thắng/thua rồi thì thôi
+        if (isGameOver) return;
         isGameOver = true;
 
         Debug.Log("Victory!");
 
-        // Hiện bảng chiến thắng
-        if (victoryPanel != null)
-        {
-            victoryPanel.SetActive(true);
-        }
+        // --- THÊM DÒNG NÀY: Lưu điểm khi thắng ---
+        SaveScore();
+        // ----------------------------------------
 
-        // Dừng game lại (hoặc để chạy slow motion cho ngầu)
+        if (victoryPanel != null) victoryPanel.SetActive(true);
         Time.timeScale = 0f;
+    }
 
-        if (AudioManager.instance != null)
+    // --- HÀM PHỤ ĐỂ GỌI LƯU ĐIỂM (Cho gọn code) ---
+    private void SaveScore()
+    {
+        if (HighScoreManager.instance != null && WaveManager.instance != null)
         {
-            AudioManager.instance.PlayVictoryMusic();
+            // Lấy wave hiện tại
+            int currentWave = WaveManager.instance.currentWaveIndex;
+
+            // Gọi HighScoreManager để lưu
+            HighScoreManager.instance.TrySaveHighScore(currentWave);
         }
     }
-    // Gắn vào nút Restart
+
     public void RestartGame()
     {
-        // Mở lại thời gian trước khi load
         Time.timeScale = 1f;
-        // Load lại scene hiện tại
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Gắn vào nút Menu
     public void GoToMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu"); // Nhớ điền đúng tên Scene Menu
+        SceneManager.LoadScene("MainMenu");
     }
 }

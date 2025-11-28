@@ -37,7 +37,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (weapons[index] != null)
         {
             weapons[index].SetActive(true);
-            Debug.Log($"Đã đổi sang súng: {weapons[index].name}");
+           // Debug.Log($"Đã đổi sang súng: {weapons[index].name}");
         }
     }
 

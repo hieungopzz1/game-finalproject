@@ -32,7 +32,7 @@ public class DropEnemy : EnemyBase
         currentMoveTarget = transform.position;
         nextRepositionTime = Time.time + Random.Range(0f, repositionInterval);
 
-        Debug.Log($"[DropEnemy {name}] Awake. safeRadius={safeRadius}, repositionInterval={repositionInterval}");
+        //Debug.Log($"[DropEnemy {name}] Awake. safeRadius={safeRadius}, repositionInterval={repositionInterval}");
     }
 
     protected override void HandleBehaviour()

@@ -4,7 +4,7 @@ using TMPro;
 public class WaveManager : MonoBehaviour
 {
     public WaveUIController waveUI;   // gán trong Inspector
-
+    public static WaveManager instance;
 
     [System.Serializable]
     public class Wave
@@ -31,7 +31,7 @@ public class WaveManager : MonoBehaviour
     public float startDelay = 1f;      // đợi 1s rồi mới spawn wave 1
     public float nextWaveDelay = 2f;   // đợi 2s giữa các wave
     public float waveSpawnDelay = 2f;
-    private int currentWaveIndex = -1;
+    public int currentWaveIndex = -1;
     private int enemiesAlive = 0;
     private bool spawningWave = false;
     private bool bossSpawned = false;
@@ -55,6 +55,14 @@ public class WaveManager : MonoBehaviour
         EnemyBase.OnAnyEnemyDied -= OnEnemyDied;
     }
 
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     private void Start()
     {
         if (AudioManager.instance != null && startMatchSound != null)
@@ -65,13 +73,6 @@ public class WaveManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PlayBattleMusic();
-        }
-
-
-        if (waves.Length >0)
-        {
-            bossWaveIndex = Random.Range(0, waves.Length);
-            Debug.Log("GAME INFO: Boss sẽ xuất hiện sau khi xong Wave " + (bossWaveIndex + 1));
         }
         StartCoroutine(StartFirstWave());
     }
@@ -88,10 +89,6 @@ public class WaveManager : MonoBehaviour
 
         if (currentWaveIndex >= waves.Length)
         {
-            //if (!bossSpawned)
-            //{
-            //    SpawnBoss();
-            //}
             return;
         }
 
@@ -183,9 +180,9 @@ public class WaveManager : MonoBehaviour
         // 3. Nếu đã sinh xong VÀ hết quái sống -> Qua màn
         Debug.Log("Wave Cleared!");
 
-        if (currentWaveIndex == waves.Length - 1)
+        if (currentWaveIndex >= waves.Length - 1)
         {
-            // Nếu đây là wave cuối cùng -> Gọi Boss
+            // Nếu đúng là Wave cuối -> Gọi Boss
             if (!bossSpawned)
             {
                 StartCoroutine(SpawnBossAfterDelay());
@@ -193,16 +190,8 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            if (currentWaveIndex < waves.Length - 1)
-            {
-                StartCoroutine(StartNextWaveAfterDelay());
-            }
-            else
-            {
-                // Trường hợp hiếm: Hết sạch Wave mà Boss vẫn chưa ra (Logic sai đâu đó)
-                // Hoặc Boss đã ra và chết rồi
-                Debug.Log("Hết Wave!");
-            }
+            // Nếu chưa phải Wave cuối -> Đi tiếp Wave sau
+            StartCoroutine(StartNextWaveAfterDelay());
         }
     }
 
