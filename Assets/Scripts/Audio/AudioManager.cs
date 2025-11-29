@@ -28,6 +28,28 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        musicSource.volume = musicVolume;
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+        sfxSource.volume = sfxVolume;
+    }
+
+    public void SetMusicVolume(float vl)
+    {
+        musicSource.volume = vl;
+        PlayerPrefs.SetFloat("MusicVolume", vl);
+        PlayerPrefs.Save();
+    }
+
+    public void SetSFXVolume(float vl)
+    {
+        sfxSource.volume = vl;
+        PlayerPrefs.SetFloat("SFXVolume", vl);
+        PlayerPrefs.Save();
+    }
+
     public void PlayMusic(AudioClip clip)
     {
         // Nếu nhạc này đang phát rồi thì thôi, không phát lại (tránh bị reset bài hát)
@@ -48,4 +70,6 @@ public class AudioManager : MonoBehaviour
     public void PlayBattleMusic() => PlayMusic(battleTheme);
     public void PlayBossMusic() => PlayMusic(bossTheme);
     public void PlayVictoryMusic() => PlayMusic(victoryTheme);
+
+
 }

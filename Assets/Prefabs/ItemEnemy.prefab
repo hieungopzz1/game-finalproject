@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DropEnemy
   maxHealth: 50
-  damage: 3
+  damage: 6
   moveSpeed: 5
   detectionRange: 30
   attackRange: 0.5

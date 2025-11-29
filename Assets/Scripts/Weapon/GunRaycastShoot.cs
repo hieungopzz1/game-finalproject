@@ -17,7 +17,8 @@ public class GunRaycastLine : MonoBehaviour
     public float reloadTime = 2.0f;  
     private int currentAmmo;
     private bool isReloading = false;
-
+    [SerializeField] private float minDmg;
+    [SerializeField] private float maxDmg;
 
     [Header("Audio")]
     public AudioClip shootSound;
@@ -65,7 +66,7 @@ public class GunRaycastLine : MonoBehaviour
             var enemy = hit.collider.GetComponent<EnemyBase>();
             if (enemy != null)
             {
-                float damage = Random.Range(5f, 7f);
+                float damage = Random.Range(minDmg,maxDmg);
                 enemy.TakeDamage(damage);
             }
         }

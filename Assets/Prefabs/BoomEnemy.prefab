@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnemy
   maxHealth: 36
-  damage: 3
+  damage: 5
   moveSpeed: 2
   detectionRange: 30
   attackRange: 0.5

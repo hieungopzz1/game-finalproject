@@ -17,6 +17,27 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
+    void Start()
+    {
+        // Phát nhạc Menu
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayMenuMusic();
+        }
+    }
+
+    public void PlayGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadSceneAsync(1);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+
     // --- HÀM THUA ---
     public void GameOver()
     {
@@ -58,6 +79,7 @@ public class GameManager : MonoBehaviour
             HighScoreManager.instance.TrySaveHighScore(currentWave);
         }
     }
+
 
     public void RestartGame()
     {

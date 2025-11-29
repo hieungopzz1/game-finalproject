@@ -8,7 +8,7 @@ public class ParallaxLayer : MonoBehaviour
     private void Start()
     {
         Sprite sp = GetComponent<SpriteRenderer>().sprite;
-        backgroundWidth = sp.texture.width / sp.pixelsPerUnit;
+        backgroundWidth = sp.texture.height / sp.pixelsPerUnit;
     }
     private void Update()
     {
